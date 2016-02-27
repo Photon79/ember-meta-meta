@@ -1,8 +1,6 @@
 import Ember from 'ember';
 
-var forEach = Ember.EnumerableUtils.forEach;
-
-export default Ember.Object.extend({
+export default Ember.Service.extend({
   /**
     Store the default document title
 
@@ -15,13 +13,13 @@ export default Ember.Object.extend({
   /**
     Set metas to be injected
 
-    For exemple :
+    For example :
 
     ```js
       this.get('meta').update({
         title: 'This Is News Title',
         description: 'This Is News Description',
-        'og:image': 'https://exemple.net/latest-news.png'
+        'og:image': 'https://example.net/latest-news.png'
       });
     ```
 
@@ -40,15 +38,15 @@ export default Ember.Object.extend({
   insert: function() {
     var self = this,
         attributes = this.get('attributes') || { title: this.get('defaultTitle') },
-        metas = document.querySelectorAll('meta[data-meta-meta="true"]');
+        metas = [].slice.call(document.querySelectorAll('meta[data-meta-meta="true"]'));
 
     // Remove previously set metas
-    forEach(metas, function(meta){
+    metas.forEach(function(meta){
       meta.removeAttribute('content');
     });
 
     // Set new metas
-    Ember.keys(attributes).forEach(function(key){
+    Object.keys(attributes).forEach(function(key){
       self.setMeta(key, attributes[key])
     });
 
@@ -68,7 +66,7 @@ export default Ember.Object.extend({
   /**
     Inject given meta in document.
 
-    Exemple :
+    Example :
 
     ```js
       self.router.setMeta('title', 'Homepage of the Crew');
